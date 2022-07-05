@@ -17,7 +17,7 @@ import request from './utils/request'
 
 // 引入vant 引入样式
 import vant from 'vant'
-import 'vant/lib/index.css'
+import 'vant/lib/index.less'
 
 // 测试请求是否可以用
 request.get('/v1_0/channels').then((res) => {
