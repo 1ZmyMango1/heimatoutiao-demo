@@ -43,7 +43,7 @@
             native-type="button"
             class="end-sms-btn"
             size="small"
-            :disabled="isDisabled"
+            :disable="isDisabled"
             @click="onSmsCode"
             >验证码</van-button
           >
@@ -101,8 +101,14 @@ export default {
     async onSubmit() {
       try {
         const res = await Login(this.user)
+        // 登录成功后获取的数据存储到vuex和本地存储当中
+        this.$store.commit('setUser', res.data.data)
         console.log(res)
+        // 登陆成功 提醒用户  登录成功 以后存储token数
         Toast.success('登录成功')
+        this.$router.push({
+          path: '/'
+        })
       } catch (e) {
         console.log(e)
         Toast.fail(e?.response?.data?.message || '登录失败')

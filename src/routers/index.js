@@ -7,6 +7,32 @@ const routes = [
   {
     path: '/login',
     component: () => import('../views/Login/index.vue')
+  },
+  {
+    path: '/demo',
+    component: () => import('../views/Demo/index.vue')
+  },
+  {
+    path: '/',
+    component: () => import('../views/Layout'),
+    children: [
+      {
+        path: 'home',
+        component: () => import('../views/Home')
+      },
+      {
+        path: 'qa',
+        component: () => import('../views/Qa')
+      },
+      {
+        path: 'video',
+        component: () => import('../views/Video')
+      },
+      {
+        path: 'my',
+        component: () => import('../views/My')
+      }
+    ]
   }
 ]
 
