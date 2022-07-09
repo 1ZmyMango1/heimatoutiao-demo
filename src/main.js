@@ -15,6 +15,9 @@ import 'amfe-flexible'
 // 引入axios
 import request from './utils/request'
 
+// 引入dayjs
+import './utils/dayjs'
+
 // 引入vant 引入样式
 import vant from 'vant'
 import 'vant/lib/index.less'

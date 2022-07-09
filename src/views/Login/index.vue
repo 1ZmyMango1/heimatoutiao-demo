@@ -1,7 +1,12 @@
 <template>
   <div class="login-container">
     <!-- title -->
-    <van-nav-bar title="登录" />
+    <!-- <span class="goBack" @click="$router.back()">×</span> -->
+    <van-nav-bar title="登录">
+      <template #left>
+        <van-icon name="cross" @click="$router.back()" color='white'/>
+      </template>
+    </van-nav-bar>
 
     <!-- 表单 -->
     <van-form @submit="onSubmit" ref="from">
@@ -156,5 +161,13 @@ export default {
     font-size: 22px;
     color: #666;
   }
+}
+
+.goBack {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  z-index: 6;
+  color: #fff;
 }
 </style>
