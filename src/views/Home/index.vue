@@ -15,7 +15,7 @@
     </van-nav-bar>
 
     <!-- 频道列表 -->
-    <van-tabs swipeable animated class="channel-tabs">
+    <van-tabs swipeable animated class="channel-tabs" v-model="active">
       <van-tab
         v-for="(item, index) in userChannel"
         :key="index"
@@ -39,7 +39,13 @@
       position="bottom"
       style="height: 90%"
     >
-      <van-cell style="text-align: center" title="频道编辑"></van-cell>
+      <!-- 传给子组件 channel-edit -->
+      <!-- active 是父组件选中当前的内容索引号 -->
+      <ChannelEdit
+        :active="active"
+        :userChannel="userChannel"
+        @changeActive="changeActive"
+      ></ChannelEdit>
     </van-popup>
   </div>
 </template>
@@ -47,9 +53,11 @@
 <script>
 import { getUserChannels } from '@/api/HomeChannel.js'
 import ArticleList from './commponents/article-list.vue'
+import ChannelEdit from './commponents/channel-edit.vue'
 export default {
   components: {
-    ArticleList
+    ArticleList,
+    ChannelEdit
   },
   data() {
     return {
@@ -62,10 +70,17 @@ export default {
     this.getUserChannels()
   },
   methods: {
+    // 获取用户频道列表
     async getUserChannels() {
       const res = await getUserChannels()
       // console.log(res)
       this.userChannel = res.data.data.channels
+    },
+    // 修改active的方法
+    changeActive(index, state) {
+      this.active = index
+      // 弹层关闭
+      this.showPopup = state
     }
   }
 }
