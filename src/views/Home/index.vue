@@ -9,6 +9,7 @@
           round
           type="info"
           size="small"
+          to="/search"
           >搜索</van-button
         >
       </template>
@@ -51,10 +52,13 @@
 </template>
 
 <script>
-import { getUserChannels } from '@/api/HomeChannel.js'
+import { getUserChannels } from '@/api/HomeChannel'
 import ArticleList from './commponents/article-list.vue'
 import ChannelEdit from './commponents/channel-edit.vue'
+import USERCHANNELKEY from '../../constants'
+import { getLocal } from '../../utils/storage'
 export default {
+  name: 'home',
   components: {
     ArticleList,
     ChannelEdit
@@ -72,9 +76,26 @@ export default {
   methods: {
     // 获取用户频道列表
     async getUserChannels() {
-      const res = await getUserChannels()
-      // console.log(res)
-      this.userChannel = res.data.data.channels
+      // const res = await getUserChannels()
+      // // console.log(res)
+      // this.userChannel = res.data.data.channels
+
+      // 如果用户登录 | 本地没有数据 ---接口
+      // 其他 -- 本地存储
+      try {
+        // 获取用户token
+        const token = this.$store.state.user?.token
+        // 获取本地存储频道数据
+        let channel = getLocal(USERCHANNELKEY)
+        if (token || !channel) {
+          const res = await getUserChannels()
+          console.log(res)
+          channel = res.data.data.channels
+        }
+        this.userChannel = channel
+      } catch (e) {
+        console.log(e)
+      }
     },
     // 修改active的方法
     changeActive(index, state) {

@@ -10,7 +10,7 @@ dayjs.locale('zh-cn')
 
 // console.log(dayjs().format('YYYY-MM-DD'))
 
-console.log(dayjs().to(dayjs('2020-02-01')))
+// console.log(dayjs().to(dayjs('2020-02-01')))
 
 // 过滤器
 Vue.filter('relativeTime', (value) => {

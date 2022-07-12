@@ -57,8 +57,16 @@
 
 <script>
 // import { differenceBy } from 'lodash ' // 引入lodash库  便于使用
+import { setLocal } from '../../../utils/storage'
+import { mapState } from 'vuex'
 import { Notify } from 'vant'
-import { getAllChannels } from '@/api/HomeChannel.js'
+import {
+  getAllChannels,
+  addUserChannel,
+  deleteUserChannel
+} from '@/api/HomeChannel'
+import USERCHANNELKEY from '@/constants'
+
 export default {
   name: 'ChannelEdit',
   components: {},
@@ -84,10 +92,11 @@ export default {
       return this.allChannels.filter((item) => {
         return !this.userChannel.some((userItem) => userItem.id === item.id)
       })
-    }
+    },
     // recommendChannel() {
     //   return differenceBy(this.allChannels, this.userChannel, 'id')
     // }
+    ...mapState(['user'])
   },
   watch: {},
   created() {
@@ -102,9 +111,39 @@ export default {
       this.allChannels = res.data.data.channels
     },
     // 添加频道到 我的频道
-    addChannel(item) {
+    async addChannel(item) {
       this.userChannel.push(item)
-      return Notify({ type: 'success', message: '添加成功~~' })
+      // return Notify({ type: 'success', message: '添加成功~~' })
+      // 判断是否有无token user
+      if (this.user) {
+        try {
+          // 已登录
+          await addUserChannel({
+            id: item.id,
+            seq: this.userChannel.length
+          })
+          this.$toast('添加成功~')
+        } catch (e) {
+          this.$toast('添加失败')
+        }
+      } else {
+        // 未登录
+        setLocal(USERCHANNELKEY, this.userChannel)
+      }
+    },
+    // 从接口删除
+    async deleteUserChannel(item) {
+      try {
+        if (this.user) {
+          // 已登录，将数据存到线上
+          await deleteUserChannel(item.id)
+        } else {
+          // 未登录，将数据存到本地
+          setLocal(USERCHANNELKEY, this.userChannel)
+        }
+      } catch (e) {
+        this.$toast('删除频道失败，请稍后再试')
+      }
     },
     // 点击切换或者删除我的编辑选项
     onMyChannelClick(item, index) {
@@ -121,7 +160,8 @@ export default {
           this.$emit('changeActive', this.active - 1, true)
         }
         this.userChannel.splice(index, 1)
-        return Notify({ type: 'success', message: '删除成功' })
+        // 持久化
+        this.deleteUserChannel(item)
       } else {
         // 非编辑状态 -->切换 -->关弹层
         this.$emit('changeActive', index, false)
