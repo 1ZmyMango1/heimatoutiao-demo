@@ -70,14 +70,22 @@
     </div>
 
     <!-- 底部区域 -->
+    <!-- v-if="articleList.art_id" -->
     <div class="article-bottom">
       <van-button class="comment-btn" type="default" round size="small"
         >写评论</van-button
       >
       <van-icon name="comment-o" :badge="articleList.comm_count" color="#777" />
       <!-- 小星星组件 -->
-      <CollectArticle></CollectArticle>
-      <van-icon color="#777" name="good-job-o" />
+      <CollectArticle
+        :artId="articleList.aut_id"
+        v-model="articleList.is_collected"
+      ></CollectArticle>
+      <!-- 点赞组件 -->
+      <LikeArticle
+        :artId="articleList.art_id"
+        v-model="articleList.attitude"
+      ></LikeArticle>
       <van-icon name="share" color="#777777"></van-icon>
     </div>
     <!-- /底部区域 -->
@@ -91,9 +99,10 @@ import 'github-markdown-css'
 import { ImagePreview } from 'vant'
 import FollowUser from './components/follow-user.vue'
 import CollectArticle from './components/collect-article.vue'
+import LikeArticle from './components/like-article.vue'
 export default {
   name: 'ArticleIndex',
-  components: { FollowUser, CollectArticle },
+  components: { FollowUser, CollectArticle, LikeArticle },
   props: {
     articleId: {
       type: [Number, String],
@@ -102,7 +111,7 @@ export default {
   },
   data() {
     return {
-      articleList: [],
+      articleList: {},
       loading: false, // 文章加载状态
       isNotFound: false // 标识当前是不是404状态
     }
