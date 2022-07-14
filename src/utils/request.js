@@ -2,11 +2,23 @@ import axios from 'axios'
 
 import store from '@/store'
 
+import jsonBig from 'json-bigint'
+
 // 创建一个axios实例
 // 通过axios创建出来的实例跟axios一模一样
 // 但是继承了一些配置项
 const request = axios.create({
-  baseURL: 'http://42.192.129.12:8000/'
+  baseURL: 'http://42.192.129.12:8000/',
+  transformResponse: [
+    function (data) {
+      // data json 格式 ---> 里面可能包含大数字
+      try {
+        return jsonBig.parse(data)
+      } catch (e) {
+        return data
+      }
+    }
+  ]
 })
 
 // 设置请求拦截器
