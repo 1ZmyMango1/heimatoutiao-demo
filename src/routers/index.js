@@ -43,6 +43,14 @@ const routes = [
     path: '/article/:articleId',
     component: () => import('../views/article/index.vue'),
     props: true
+  },
+  {
+    path: '/user/profile',
+    component: () => import('../views/user-profile/index.vue')
+  },
+  {
+    path: '/ali',
+    component: () => import('../views/Ali/index.vue')
   }
 ]
 
